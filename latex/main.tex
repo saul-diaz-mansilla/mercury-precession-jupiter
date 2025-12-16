@@ -1,0 +1,300 @@
+\documentclass[journal]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage[font=footnotesize]{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{mathrsfs}
+\usepackage[superscript]{cite}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+
+\titlespacing*{\section}{0pt}{1.2ex plus .2ex minus .2ex}{0.8ex plus .1ex}
+\titlespacing*{\subsection}{0pt}{1.0ex plus .2ex minus .2ex}{0.6ex plus .1ex}
+
+\markboth{S. Díaz Manislla}
+{Shell \MakeLowercase{\textit{et al.}}:}
+
+\title{Mercury's precession due to Jupiter: a simple model}
+\author{Saúl Díaz Mansilla}
+\date{\today}
+
+\begin{document}
+\setcounter{secnumdepth}{3}
+\maketitle
+% \tableofcontents
+
+\begin{abstract}
+    We found the value of the precession of Mercury's orbit due to Jupiter to be of $152\pm8$ arc seconds per century, which matches the experimental value of $152.6$ arc seconds per century. This indicates that our simulations of the three-body problem are accurate enough and that our method for calculating perihelia is valid.
+\end{abstract}
+
+\section{Introduction}
+
+\IEEEPARstart{T}{he} study of planetary motion has been a cornerstone of astronomy and celestial mechanics since the times of Kepler and Newton. In particular, Mercury's orbit has been the subject of thorough analysis due to its peculiar precession, which cannot be fully explained by Newtonian mechanics. It has been shown that part of this precession is caused by gravitational interactions with other celestial bodies, with Jupiter being one of the main contributors due to its large mass. In this work, the problem of Mercury's precession is addressed by considering the influence of Jupiter within the framework of the three-body problem. To achieve this, numerical integration methods, such as the Euler-Cromer method, are implemented with the aim of reproducing the observed precession value and analyzing the accuracy of the proposed model.
+
+
+
+\section{Theory}\label{sec:theory}
+
+\subsection{The n body problem}
+
+We consider a system with $n$ bodies interacting through Newtonian gravity. For the case where $n=2$, and with a low enough energy ($\varepsilon < 1$), the theory predicts closed elliptic orbits, fixed with respect to the center of mass. The equation that describes them in polar coordinates is \cite{goldstein}:
+\begin{equation}
+    r(\theta)=\frac{a(1-\varepsilon^2)}{1+\varepsilon\cos(\theta-\omega)}
+    \label{eq:ellipse}
+\end{equation}
+where $\varepsilon$ is the eccentricity of the orbit, $a$ its semi-major axis, and $\omega$ the angle of the perihelion. These are known as the celestial elements of the orbit\cite{celestialmechanics}.
+
+However, for a value of $n\geq3$ it is well known that a general analytic solution to this problem does not exist. Nevertheless, we can find solutions for cases where small perturbations are introduced in a two-body problem. According to perturbation theory, the solutions are elliptical orbits where the celestial elements slowly vary with time, i.e.:
+\begin{equation}
+    r(\theta)\approx\frac{a(t)(1-\varepsilon(t)^2)}{1+\varepsilon(t)\cos(\theta-\omega(t))}
+    \label{eq:ellipse_precession}
+\end{equation}
+
+We are interested in the precession of the orbit, which is the variation of the perihelion angle with respect to time, $\dot\omega$.
+
+This results in an overall precession of Mercury's orbit of $\dot\omega=532''/$ century.
+
+The planet with the highest contribution to this effect is Venus, due to its proximity, and the next one is Jupiter, due to its high mass\cite{precession}.
+
+Our study will focus on the three-body problem given by Mercury, Jupiter and the Sun. Using Newtonian gravity, their interaction will be given by:
+\begin{gather}
+    \vec{a}_M= -\frac{GM_S}{|\vec{r}_M-\vec{r}_S|^3}(\vec{r}_M-\vec{r}_S)
+    -\frac{GM_J}{|\vec{r}_M-\vec{r}_J|^3}(\vec{r}_M-\vec{r}_J)\label{eq:Mercurio}\\
+    \vec{a}_J= -\frac{GM_S}{|\vec{r}_J-\vec{r}_S|^3}(\vec{r}_J-\vec{r}_S) \label{eq:Jupiter}\\
+    \vec{a}_S= -\frac{GM_J}{|\vec{r}_S-\vec{r}_J|^3}(\vec{r}_S-\vec{r}_J) \label{eq:Sol}
+\end{gather}
+where the variables are the positions $\vec{r}_M, \vec{r}_J, \vec{r}_S$ of Mercury, Jupiter, and the Sun, and the parameters are described in table \ref{tab:datos}.
+
+We will consider the contributions of Mercury to the accelerations of the Sun and Jupiter negligible, since its mass is much lower than that of the other bodies.
+
+It is important to note that we are using the astronomical system of units, based on the following quantities:
+\begin{itemize}
+    \item Distance: Astronomical Unit (AU) $\equiv$ $149.597.870.700$ m (distance from Earth to the Sun)
+    \item Time: Earth year (year) $\equiv$ $365,25$ days
+    \item Mass: Solar Mass ($M_\odot$) $\equiv$ $2\times10^{30}$ kg 
+\end{itemize}
+
+\subsection{Initial conditions}
+
+A useful approximation is that the orbits of each planet around the Sun can be viewed as two-body problems for short times. This allows us to obtain radii and eccentricities for the orbit of each planet around the Sun, and therefore obtain expressions for the initial conditions for each body.
+
+In the case of the Solar System, all planets are located in the same plane, the ecliptic plane, which we will take as $z=0$, and only use coordinates $(x,y)$.
+
+The initial conditions for Mercury will be its position in the perihelion, $\vec{r}_{min}$, and its speed at that point, $\vec{v}_{max}$, given by the following expressions:
+\begin{gather}
+    r_{min}=a(1-\varepsilon)\\
+    v_{max}=\sqrt{GM_S\frac{1+\varepsilon}{r_{min}}}
+\end{gather}
+where $a$ is the semi-major axis of the orbit and $\varepsilon$ is its eccentricity.
+
+We will take as convention the initial position on the $x$ axis and the initial speed perpendicular (as we are on the perihelion), pointing towards the $y$ axis.
+
+Jupiter's orbit will be considered circular. Its initial position will be also taken on the $x$ axis, and its speed will be given by a uniform circular motion:
+\begin{equation}
+    v_J=\frac{2\pi R}{T_J}
+\end{equation}
+where $T_J$ is Jupiter's period around the Sun. We will also consider the Sun's movement on this system, which will also occur at $z=0$. We will take the Sun's initial position at the origin, but its initial velocity cannot be zero for convenience, as we want the center of mass to be static. The condition $\vec{0}=\vec{P}_{CM}=M_M\vec{v}_M+M_J\vec{v}_J+M_S\vec{v}_S$, implies that:
+\begin{equation}
+    \vec{v}_S=-\frac{M_M\vec{v}_M+M_J\vec{v}_J}{M_S}
+\end{equation}
+
+Finally, we will use Kepler's Third Law to obtain the period $T$ of a planet given its semi-major axis $a$ with the required precision:
+\begin{equation}
+    T = 2\pi\sqrt{\frac{a^3}{G(M_S+M_P)}}\label{eq:kepler3}
+\end{equation}
+In this way, no numerical error is accumulated due to insufficient decimals.
+
+\subsection{Mercury's precession}
+
+According to observational data, Mercury's orbit precesses a very small amount, approximately $574.10\pm0.65''/\text{century}$\cite{wikipedia}. Of this total, the contributions are:
+\begin{itemize}
+    \item Celestial bodies: $\sim 532''/\text{century}$\cite{wikipedia}, of which $\sim 152''/\text{century}$ are due to Jupiter \cite{precession}.
+    \item General Relativity: $43''/\text{century}$ due to the multi-polar expansion of the resulting gravity potential\cite{wikipedia}.
+\end{itemize}
+The aim of this paper is to recreate the value of Mercury's precession due to Jupiter using numerical simulations.
+
+\section{Numerical methods}\label{sec:precession}
+
+Given an orbit with relative positions to the Sun $(x,y)$, semi-major axis $a$ and eccentricity $\varepsilon$, we simulate its precession with the following algorithm:
+\begin{enumerate}
+    \item Integrate the equations of motion \eqref{eq:Mercurio}, \eqref{eq:Jupiter}, \eqref{eq:Sol} using the Euler-Cromer method\cite{giordano} as we need a method that conserves energy in each period to avoid accumulation of numerical error.
+    \item Calculate the polar coordinates of Mercury relative to the Sun: $r=\sqrt{(x_M-x_S)^2+(y_M-y_S)^2}$, $ \theta=\arctan((y_M-y_S)/(x_M-x_S)).$
+    \item Find the perihelia as relative minima of $r$.
+    \item Fit the data $(r(t),\theta(t))$ between the perihelia to an ellipse rotated by an angle $\omega$, given by equation \eqref{eq:ellipse}. From this, obtain the value of $\omega$. Taking the angle for the point of the minimum distance does not yield the correct result.
+    \item Add $2\pi n$ when necessary to compensate for the loops that the ellipse can make when rotating it.
+    \item Compensate for artificial precession due to numerical error and average over cyclic behavior.
+    \item Fit the times $t$ versus the angles $\omega$ using a linear relation. Obtain $d\omega/dt$, which is by definition the precession of the orbit.
+\end{enumerate}
+Moreover, we observe oscillations added to the linear behavior of $\omega$ with respect to time. To account for them:
+\begin{itemize}
+    \item Find the period of the oscillations as the mean time between the maxima.
+    \item Make a measurement around every point ($T/2$ on each side), taking into account the boundary effects.
+    \item Find the slope using the previously obtained mean. Delete the points separated by $T/2$ in the boundaries.
+\end{itemize}
+
+\section{Results}
+
+\subsection{The two-body problem: numerical solution}
+
+We will study Mercury's trajectory when it interacts just with the Sun. The equations of motion of the system will be \eqref{eq:Mercurio}, \eqref{eq:Jupiter}, \eqref{eq:Sol} with $M_J=0$.
+
+The analytic solution is given by the equation \eqref{eq:ellipse}, a stationary ellipse. However, when integrating the equations numerically, some precession is observed. This is due to the numerical error of the method, which builds up over each period when not completing exactly a full rotation (see figures \ref{fig:two_body_orbit} and \ref{fig:two_body_precession}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.45\textwidth]{two_body_orbit.png}
+    \includegraphics[width=0.45\textwidth]{two_body_orbit_amp.png}
+    \caption{Mercury's orbit in the two-body problem. We see that the perihelia do not happen every period, which introduces a numerical error.}
+    \label{fig:two_body_orbit}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.45\textwidth]{dt_5000.png}
+    \caption{Angle of the perihelion $\omega$ as a function of time for 5000 divisions per period, integrated up to 100 periods of Mercury. We observe precession due to the accumulated numerical error.}
+    \label{fig:two_body_precession}
+\end{figure}
+
+We observe a precession of $-242''/$century, which is on the order of the expected value of $152''/$century, so the numerical error is not negligible for our purposes. As it is not efficient to take a sufficiently low $dt$ to  reduce the artificial precession, we will compensate for this value when solving the three-body problem for Mercury.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{precession_error.png}
+    \caption{Precession in the two-body problem as a function of the divisions per period used.}
+    \label{fig:precession_error}
+\end{figure}
+
+\subsection{Precession due to Jupiter}
+
+We now consider the influence of Jupiter over Mercury, resulting in a three-body problem. As stated in section \ref{sec:theory}, we will choose a frame of reference where the center of mass is static.
+
+The resulting orbits are much more interesting (see figure \ref{fig:jupiter_orbit}), as the behavior after each period drifts significantly from the perihelia. Moreover, we see a much thicker orbit, due to the influence of Jupiter, which modifies the shape of the orbit. The points sampled in each period show that the size of the orbit oscillates between a maximum and a minimum.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.38\textwidth]{jupiter_orbit.png}
+    \includegraphics[width=0.45\textwidth]{jupiter_a.png}    
+    \caption{On top, orbit of Mercury relative to the Sun in the three-body problem, using 5000 divisions per period and integrated over 100 periods}
+    \label{fig:jupiter_orbit}
+\end{figure}
+
+Now we will see the precession obtained with the algorithm described in section \ref{sec:precession}. In figure \ref{fig:jupiter_precession}, we observe the angle of the orbit $\omega$ versus time.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{jupiter_precession_dt_5000.png}
+    \caption{Precession of Mercury relative to the Sun in the three-body problem, obtained with 5000 divisions per period and integrated over 100 periods of Mercury. The precession obtained in the linear fit is $-91\pm8''/\text{century}$, and in the fit to the average, $-85\pm1'' /\text{century}$.}
+    \label{fig:jupiter_precession}
+\end{figure}
+
+It is clear that the behavior of the precession is a sum of two movements: a \textit{secular} precession contributing linearly plus a \textit{synodic} precession that provides sinusoidal oscillations.
+
+Taking into account the precession introduced by the numerical error, we can obtain the value of the precession of Mercury due to Jupiter:
+\begin{equation}
+    \dot\omega = 152\pm8''/\text{century}
+\end{equation}
+
+It is also interesting to study the synodic oscillations. In figure \ref{fig:jupiter_synodic} we represent the synodic precession, obtained by subtracting the linear component. The diagram shows a period of 5.93 years, which verifies the following ratios:
+\begin{equation*}
+    \frac{T_J}{T_{synodic}}\approx2,\ \frac{T_M}{T_{synodic}}\approx25
+\end{equation*}
+
+Lastly, it is necessary to see that the precession value obtained by this method is not cherry-picked from the choice of $dt$, but is valid for all reasonable values of the time step.
+
+We calculate precessions for the two and three-body problems for different values of $dt$ and represent the results on figure \ref{fig:jupiter_error}. It is clear that the difference between the precessions is constant for the values of $dt$ studied, which reaffirms our hypothesis, and the constant value matches the experimental observations.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{jupiter_synodic_dt5000.png}
+    \caption{Synodic oscillations in Mercury's precession}
+    \label{fig:jupiter_synodic}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{jupiter_error.png}
+    \caption{Mercury's precession for different values of $dt$. The mean of the obtained values is of 152.12''/century.}
+    \label{fig:jupiter_error}
+\end{figure}
+
+\section{Conclusion}
+
+Through numerical simulation of the Sun–Mercury–Jupiter system, it has been possible to estimate the precession of Mercury’s orbit due to the gravitational influence of Jupiter.
+
+Several methods for calculating this value have been tested, among which the extrapolation method was discarded for producing results that were too imprecise. The most precise result was ultimately obtained using a direct linear fit to the rotation angle, which—although it carries a larger error (due to synodic oscillations)—is still more accurate than the fit performed after averaging to eliminate those oscillations, since the averaging introduces greater inaccuracies. We finally obtain a value of $152\pm8''/$ century, which matches the experimental result of $152.6''/$century.
+
+As can be seen, after correcting the numerical error introduced by the Euler–Cromer integration, the obtained precession value matches the real value in all significant figures, with a very small computation time.
+
+Additional behaviors of Mercury due to Jupiter have also been reproduced, such as synodic oscillations. These resonance effects in the orbital periods are successfully reproduced in the simulation, and the deformation of Mercury’s orbital size can be observed.
+
+Therefore, we conclude that the method developed is viable and yields physical results, very useful for computationally studying celestial mechanics phenomena.
+
+\appendix
+\section{Table of parameters and values}
+For the simulation, we used the data enumerated in table \ref{tab:datos}, taken from \cite{giordano}.
+
+Note that:
+\begin{itemize}
+    \item The orbital period is recalculated using equation \eqref{eq:kepler3} to achieve more numerical precision.
+    \item We integrate over 100 periods of Mercury because both Mercury's and Jupiter's orbits repeat every \~ 50 periods, so that the results obtained have a periodic pattern.
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{6.5pt} % Ajustar el espaciado entre columnas
+    \begin{tabular}{| l | c | c |}
+        \hline
+        \textbf{Parameter} & \textbf{Symbol} & \textbf{Value} \\
+        \hline
+        \multicolumn{3}{|l|}{\textbf{General parameters}} \\
+        \hline
+        Gravitational constant & $G$ & $4\pi^2\ \text{AU}^3/\text{year}^2/M_\odot$ \\
+        \hline
+        \multicolumn{3}{|l|}{\textbf{Mercury's parameters}} \\
+        \hline
+        Orbital period & $T$ & $0.24 \ \text{years}$ \\
+        Eccentricity & $\varepsilon$ & $0.206$ \\
+        Semi-major axis & $a$ & $0.39\ \text{AU}$ \\
+        Mass & $M_M$ & $1.65 \times 10^{-7} M_\odot$ \\
+        \hline
+        \multicolumn{3}{|l|}{\textbf{Jupiter's parameters}} \\
+        \hline
+        Mass & $M_J$ & $9.5 \times 10^{-4}\ M_\odot$ \\
+        Orbital period & $T_J$ & $11.86\ \text{years}$ \\
+        Distance to the Sun & $R$ & $5.2\ \text{AU}$ \\
+        \hline
+        \multicolumn{3}{|l|}{\textbf{Simulation parameters}} \\
+        \hline
+        Total time & $t_f$ & $100T$ \\
+        Time step & $dt$ & $T/n_{div}$ \\
+        Number of steps & $N$ & $t_f / dt$ \\
+        \hline
+    \end{tabular}
+    \caption{Table of parameters used in the simulation of the Solar System}
+    \label{tab:datos}
+\end{table}
+
+\bibliographystyle{unsrturl}
+
+\bibliography{biblography}
+
+\end{document}
+
+% ------------------- TO DO LIST
+% write abstract
+% translate and de-AI-ify introduction & conclusion
+% upgrade figures and add errors
+% refine precession calculation
+% compare to 3d model using inclinations
+

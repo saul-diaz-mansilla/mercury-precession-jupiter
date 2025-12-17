@@ -13,6 +13,7 @@ import numba as nb
 from scipy.optimize import curve_fit
 import landaubeta as hasperdido
 from pathlib import Path
+import pandas as pd
 
 """--- Initialization ---"""
 
@@ -235,25 +236,27 @@ perr_a = np.sqrt(np.diag(pcov_a))
 res_a = a_perihelion - empirical_2(t_perihelion, *popt_a) if not np.all(np.isnan(popt_a)) else np.full_like(a_perihelion, np.nan)
 chi2_a = np.nansum((res_a / da_perihelion)**2) if np.all(np.isfinite(da_perihelion)) else np.nan
 
-# Print fit parameters
 print(f"\np-value for perihelion angle fit: {p_value_omegadot:.120f}")
+
+# Print fit parameters
+
+parameter_list = ["m (rad/s)", "T (s)", "A (rad)", "B (rad)", "$t_0$ (s)", "$\\phi$ (rad)", "n (rad)"]
+formatted_list = [hasperdido.latex_format(parameter, error) for parameter, error in zip(popt, perr)]
+hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / ".." / "figures" / "precession.tex")
 print(f"\nPerihelion fit parameters:")
-parameter_list = ['m (rad/s)', 'T (s)', 'A (rad)', 'B (rad)', 't_0 (s)', 'φ (rad)', 'n (rad)']
-for i in range(len(popt)):
-    parameter_value, parameter_error = hasperdido.format_value_error(popt[i], perr[i])
-    print(f"  {parameter_list[i]}: {parameter_value} ± {parameter_error}")
+hasperdido.print_scientific(popt, perr, parameter_list)
 
-print(f"\nEccentricity fit parameters:")
 parameter_list = ['T (s)', 'A', 'B', 't_0 (s)', 'φ (rad)', 'n']
-for i in range(len(popt_e)):
-    parameter_value, parameter_error = hasperdido.format_value_error(popt_e[i], perr_e[i])
-    print(f"  {parameter_list[i]}: {parameter_value} ± {parameter_error}")
+formatted_list = [hasperdido.latex_format(parameter, error) for parameter, error in zip(popt_e, perr_e)]
+hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / ".." / "figures" / "eccentricity.tex")
+print(f"\nEccentricity fit parameters:")
+hasperdido.print_scientific(popt_e, perr_e, parameter_list)
 
-print(f"\nSemi-major axis fit parameters:")
 parameter_list = ['T (s)', 'A (AU)', 'B (AU)', 't_0 (s)', 'φ (rad)', 'n (AU)']
-for i in range(len(popt_a)):
-    parameter_value, parameter_error = hasperdido.format_value_error(popt_a[i], perr_a[i])
-    print(f" {parameter_list[i]}: {parameter_value} ± {parameter_error}")
+formatted_list = [hasperdido.latex_format(parameter, error) for parameter, error in zip(popt_a, perr_a)]
+hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / ".." / "figures" / "semi-major_axis.tex")
+print(f"\nSemi-major axis fit parameters:")
+hasperdido.print_scientific(popt_a, perr_a, parameter_list)
 
 print(f"\nTotal analysis time: {time.time() - time_start:.2f} seconds")
 time_start = time.time()

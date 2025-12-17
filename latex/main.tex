@@ -13,6 +13,7 @@
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{mathrsfs}
+\usepackage{booktabs}
 \usepackage[superscript]{cite}
 \usepackage{etoolbox}
 
@@ -67,7 +68,7 @@ Our study will focus on the three-body problem given by Mercury, Jupiter and the
     -\frac{GM_J}{|\vec{r}_M-\vec{r}_J|^3}(\vec{r}_M-\vec{r}_J)\label{eq:Mercurio}\\
     \vec{a}_J= -\frac{GM_S}{|\vec{r}_J-\vec{r}_S|^3}(\vec{r}_J-\vec{r}_S) \label{eq:Jupiter}\\
     \vec{a}_S= -\frac{GM_J}{|\vec{r}_S-\vec{r}_J|^3}(\vec{r}_S-\vec{r}_J) \label{eq:Sol}
-\end{gather}
+\end{gather}    
 where the variables are the positions $\vec{r}_M, \vec{r}_J, \vec{r}_S$ of Mercury, Jupiter, and the Sun, and the parameters are described in table \ref{tab:parametros}.
 
 We will consider the contributions of Mercury to the accelerations of the Sun and Jupiter negligible, since its mass is much lower than that of the other bodies.
@@ -246,6 +247,7 @@ Note that:
 
 \begin{table}[h]
     \centering
+    \caption{Table of parameters used in the simulation of the Solar System.}
     \renewcommand{\arraystretch}{1}
     \setlength{\tabcolsep}{6.5pt} % Ajustar el espaciado entre columnas
     \begin{tabular}{| l | c | c |}
@@ -274,10 +276,46 @@ Note that:
         Number of steps & $N$ & $t_f / dt$ \\
         \hline
     \end{tabular}
-    \caption{Table of parameters used in the simulation of the Solar System.}
     \label{tab:parametros}
 \end{table}
 % ($\text{AU}^3/\text{year}^2/M_\odot$)
+
+\begin{table}[ht]
+    \centering
+    \caption{Best-fit parameters for the precession model.}
+    \label{tab:fit_params}
+    \begin{tabular}{ll}
+        \toprule
+        Parameter & Value $\pm$ Error \\
+        \midrule
+        \input{../figures/precession.tex}
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Best-fit parameters for the eccentricity model.}
+    \label{tab:fit_e}
+    \begin{tabular}{ll}
+        \toprule
+        Parameter & Value $\pm$ Error \\
+        \midrule
+        \input{../figures/eccentricity.tex}
+        \bottomrule
+    \end{tabular}
+
+\begin{table}[ht]
+    \centering
+    \caption{Best-fit parameters for the semi-major axis model.}
+    \label{tab:fit_a}
+    \begin{tabular}{ll}
+        \toprule
+        Parameter & Value $\pm$ Error \\
+        \midrule
+        \input{../figures/semi-major_axis.tex}
+        \bottomrule
+    \end{tabular}
 
 \bibliographystyle{unsrt}
 
@@ -285,10 +323,15 @@ Note that:
 
 \end{document}
 
-% ------------------- TO DO LIST
-% write abstract
-% translate and de-AI-ify introduction & conclusion
-% upgrade figures and add errors
-% refine precession calculation
+% -------- TO DO LIST --------
+% explain eccentricity plot
+% explain why initial angle is not 0
+% link tables with fit parameters
+% dts argument and validity of fits
 % compare to 3d model using inclinations
 
+% change results section and figures
+% improve theory section
+% write abstract
+% write introduction
+% write conclusion

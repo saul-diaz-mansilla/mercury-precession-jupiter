@@ -1,12 +1,13 @@
 """
 Mercury's precession due to Jupiter: a simple model
 Saúl Díaz Mansilla
-Updated: 16/12/2025
+Updated: 17/12/2025
 """
 
 import numpy as np
 from numpy import pi as π
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 import time
 import numba as nb
 from scipy.optimize import curve_fit
@@ -56,17 +57,17 @@ def ellipse(theta, theta_0, a, ecc):
     r = a * (1 - ecc**2) / (1 + ecc * np.cos(theta - theta_0))
     return r
 
-def empirical_fit(t, m, T, A, B, t_0, phi, n):
+def empirical_fit(t, m, T, A, B, t_0, φ, n):
     """Empirical function to fit the perihelion angle evolution.
 
     Consists of a linear trend plus two sinusoidal oscillations.
     """
-    return -A * np.sin(2 * π / T * (t - t_0)) + B * np.sin(π / T * (t - t_0) + phi) + m * t + n
+    return -A * np.sin(2 * π / T * (t - t_0)) + B * np.sin(π / T * (t - t_0) + φ) + m * t + n
 
-def empirical_2(t, T, A, B, t_0, phi, n):
+def empirical_2(t, T, A, B, t_0, φ, n):
     """Empirical function consisting of two sinusoidal oscillations.
     """
-    return A * np.sin(2 * π / T * (t - t_0)) + B * np.sin(π / T * (t - t_0) + phi) + n
+    return A * np.sin(2 * π / T * (t - t_0)) + B * np.sin(π / T * (t - t_0) + φ) + n
 
 
 """--- N-body simulation functions ---"""
@@ -237,19 +238,19 @@ chi2_a = np.nansum((res_a / da_perihelion)**2) if np.all(np.isfinite(da_periheli
 # Print fit parameters
 print(f"\np-value for perihelion angle fit: {p_value_omegadot:.120f}")
 print(f"\nPerihelion fit parameters:")
-parameter_list = ['m (rad/s)', 'T (s)', 'A (rad)', 'B (rad)', 't_0 (s)', 'phi (rad)', 'n (rad)']
+parameter_list = ['m (rad/s)', 'T (s)', 'A (rad)', 'B (rad)', 't_0 (s)', 'φ (rad)', 'n (rad)']
 for i in range(len(popt)):
     parameter_value, parameter_error = hasperdido.format_value_error(popt[i], perr[i])
     print(f"  {parameter_list[i]}: {parameter_value} ± {parameter_error}")
 
 print(f"\nEccentricity fit parameters:")
-parameter_list = ['T (s)', 'A', 'B', 't_0 (s)', 'phi (rad)', 'n']
+parameter_list = ['T (s)', 'A', 'B', 't_0 (s)', 'φ (rad)', 'n']
 for i in range(len(popt_e)):
     parameter_value, parameter_error = hasperdido.format_value_error(popt_e[i], perr_e[i])
     print(f"  {parameter_list[i]}: {parameter_value} ± {parameter_error}")
 
 print(f"\nSemi-major axis fit parameters:")
-parameter_list = ['T (s)', 'A (AU)', 'B (AU)', 't_0 (s)', 'phi (rad)', 'n (AU)']
+parameter_list = ['T (s)', 'A (AU)', 'B (AU)', 't_0 (s)', 'φ (rad)', 'n (AU)']
 for i in range(len(popt_a)):
     parameter_value, parameter_error = hasperdido.format_value_error(popt_a[i], perr_a[i])
     print(f" {parameter_list[i]}: {parameter_value} ± {parameter_error}")
@@ -260,52 +261,69 @@ time_start = time.time()
 
 """--- Plot results ---"""
 
-# Plot data and fits
-plt.errorbar(t_perihelion, theta_perihelion, yerr=dtheta_perihelion, fmt='.', label="Perihelia")
-plt.plot(t_perihelion, empirical_fit(t_perihelion, *popt), label="Empirical fit")
+# Precession plot
+fig, ax = plt.subplots()
+ax.errorbar(t_perihelion, theta_perihelion, yerr=dtheta_perihelion, fmt='.', ms=3, alpha=0.5, label="Perihelia")
+ax.plot(t_perihelion, empirical_fit(t_perihelion, *popt), linewidth=2.5, label="Empirical fit")
 
 # Create text box with precession value in LaTeX notation
 precession_value, precession_error = hasperdido.format_value_error(popt[0] * 3600 * 100 * (180/π), perr[0] * 3600 * 100 * (180/π))
 
 text_str = f"$\dot{{\omega}} = {precession_value} \pm {precession_error}$ arcsec/century"
-props = dict(boxstyle='round', facecolor='wheat', alpha=0.8)
-plt.text(
-    0.95, 0.05,                    # x, y in axes coordinates (5% from left, 5% from bottom)
+props_textbox = dict(boxstyle='round', facecolor='wheat', alpha=0.8)
+ax.text(
+    0.95, 0.05,                    # x, y in axes coordinates (95% from left, 5% from bottom)
     text_str,
     transform=plt.gca().transAxes, # axes coords [0..1]
     fontsize=12,
     verticalalignment='bottom',    # anchor vertically at the bottom of the text
     horizontalalignment='right',   # anchor horizontally at the right of the text
-    bbox=props
+    bbox=props_textbox
 )
 
-plt.xlabel(r'$t$ (years)')
-plt.ylabel(r'$\theta$ (rad)')
-plt.title("Precession of Mercury's perihelion with Jupiter Perturbation")
-plt.legend(loc='upper left')
+ax_ins = inset_axes(ax, 
+                    width="30%", 
+                    height="30%",
+                    loc='lower left',
+                    bbox_to_anchor=(0.65, 0.18, 1, 1), # (x, y, width, height)
+                    bbox_transform=ax.transAxes,
+                    borderpad=0)
+ax_ins.errorbar(t_perihelion, theta_perihelion, yerr=dtheta_perihelion, fmt='.', ms=4, alpha=0.7, label="Perihelia")
+ax_ins.plot(t_perihelion, empirical_fit(t_perihelion, *popt), linewidth=2, label="Empirical fit")
+ax_ins.set_xlim(85.3, 99.9)
+ax_ins.set_ylim(.005338, .005553)
+# ax_ins.set_xticklabels([])
+# ax_ins.set_yticklabels([])
+mark_inset(ax, ax_ins, loc1=2, loc2=1, fc="none", ec="0.5")
+
+ax.set_xlabel(r'$t$ (years)')
+ax.set_ylabel(r'$\theta$ (rad)')
+# ax.set_title("Precession of Mercury's perihelion with Jupiter Perturbation")
+ax.legend(loc='upper left')
 plt.savefig(current_dir / ".." / "figures" / "precession.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
 # plt.show()
 
-fig, ax = plt.subplots(figsize=(10, 6))
+# Eccentricity plot
+fig, ax = plt.subplots()
 ax.errorbar(t_perihelion, ecc_perihelion, yerr=decc_perihelion, fmt='.', capsize=5, label="Eccentricity from ellipse fits")
 ax.plot(t_perihelion, empirical_2(t_perihelion, *popt_e), '-', color='C1', label='Empirical fit')
 ax.axhline(y=ecc_0, color='r', linestyle='--', label=f"Initial eccentricity: {ecc_0:.6f}")
 ax.set_xlabel(r'$t$ (years)')
 ax.set_ylabel(r'Eccentricity $\varepsilon$')
-ax.set_title(r'Mercury orbital eccentricity evolution due to Jupiter perturbation')
+# ax.set_title(r'Mercury orbital eccentricity evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
 plt.legend(loc='upper left')
 plt.savefig(current_dir / ".." / "figures" / "eccentricity.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
 # plt.show()
 
-
-fig, ax = plt.subplots(figsize=(10, 6))
+# Semi-major axis plot
+fig, ax = plt.subplots()
 ax.errorbar(t_perihelion, a_perihelion, yerr=da_perihelion, fmt='.', capsize=5, label="Semi-major axis from ellipse fits")
 ax.plot(t_perihelion, empirical_2(t_perihelion, *popt_a), '-', color='C2', label='Empirical fit')
 ax.axhline(y=a_0, color='r', linestyle='--', label=f"Initial semi-major axis: {a_0:.6f} AU")
 ax.set_xlabel(r'$t$ (years)')
 ax.set_ylabel(r'Semi-major axis $a$ (AU)')
-ax.set_title(r'Mercury orbital semi-major axis evolution due to Jupiter perturbation')
+# ax.set_title(r'Mercury orbital semi-major axis evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
 plt.legend(loc='upper left')
 plt.savefig(current_dir / ".." / "figures" / "semi-major_axis.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})

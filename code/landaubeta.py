@@ -1,7 +1,7 @@
 """
-Utility funtions for data analysis and formatting.
+Utility functions for data analysis and formatting.
 Saúl Díaz Mansilla
-Updated: 16/12/2025
+Updated: 17/12/2025
 """
 
 import math
@@ -13,6 +13,21 @@ def use_latex_fonts():
     """Configure matplotlib to use LaTeX font rendering"""
     plt.rcParams['text.usetex'] = True
     plt.rcParams['font.family'] = 'serif'
+
+def use_IEEE_style():
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.serif": ["Times"],     # IEEE uses Times New Roman
+        "font.size": 10,             # Standard IEEE body text size
+        "axes.labelsize": 10,
+        "legend.fontsize": 8,        # Slightly smaller legends
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "figure.figsize": (3.5, 3.5 / 1.618),
+        "savefig.bbox": "tight",     # Minimizes white space around the plot
+        "savefig.pad_inches": 0.05
+})
 
 def format_value_error(value, error):
     """Format value with precision matching error's significant figures"""

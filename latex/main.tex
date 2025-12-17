@@ -3,8 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{physics}
 \usepackage{graphicx}
-\usepackage[font=footnotesize]{caption}
-\usepackage{subcaption}
+\usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{amssymb}
@@ -16,12 +15,8 @@
 \usepackage{mathrsfs}
 \usepackage[superscript]{cite}
 \usepackage{etoolbox}
-\usepackage{titlesec}
 
-\titlespacing*{\section}{0pt}{1.2ex plus .2ex minus .2ex}{0.8ex plus .1ex}
-\titlespacing*{\subsection}{0pt}{1.0ex plus .2ex minus .2ex}{0.6ex plus .1ex}
-
-\markboth{S. Díaz Manislla}
+\markboth{S. Díaz Mansilla}
 {Shell \MakeLowercase{\textit{et al.}}:}
 
 \title{Mercury's precession due to Jupiter: a simple model}
@@ -73,7 +68,7 @@ Our study will focus on the three-body problem given by Mercury, Jupiter and the
     \vec{a}_J= -\frac{GM_S}{|\vec{r}_J-\vec{r}_S|^3}(\vec{r}_J-\vec{r}_S) \label{eq:Jupiter}\\
     \vec{a}_S= -\frac{GM_J}{|\vec{r}_S-\vec{r}_J|^3}(\vec{r}_S-\vec{r}_J) \label{eq:Sol}
 \end{gather}
-where the variables are the positions $\vec{r}_M, \vec{r}_J, \vec{r}_S$ of Mercury, Jupiter, and the Sun, and the parameters are described in table \ref{tab:datos}.
+where the variables are the positions $\vec{r}_M, \vec{r}_J, \vec{r}_S$ of Mercury, Jupiter, and the Sun, and the parameters are described in table \ref{tab:parametros}.
 
 We will consider the contributions of Mercury to the accelerations of the Sun and Jupiter negligible, since its mass is much lower than that of the other bodies.
 
@@ -150,7 +145,7 @@ We will study Mercury's trajectory when it interacts just with the Sun. The equa
 
 The analytic solution is given by the equation \eqref{eq:ellipse}, a stationary ellipse. However, when integrating the equations numerically, some precession is observed. This is due to the numerical error of the method, which builds up over each period when not completing exactly a full rotation (see figures \ref{fig:two_body_orbit} and \ref{fig:two_body_precession}).
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{two_body_orbit.png}
     \includegraphics[width=0.45\textwidth]{two_body_orbit_amp.png}
@@ -158,7 +153,7 @@ The analytic solution is given by the equation \eqref{eq:ellipse}, a stationary 
     \label{fig:two_body_orbit}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{dt_5000.png}
     \caption{Angle of the perihelion $\omega$ as a function of time for 5000 divisions per period, integrated up to 100 periods of Mercury. We observe precession due to the accumulated numerical error.}
@@ -167,7 +162,7 @@ The analytic solution is given by the equation \eqref{eq:ellipse}, a stationary 
 
 We observe a precession of $-242''/$century, which is on the order of the expected value of $152''/$century, so the numerical error is not negligible for our purposes. As it is not efficient to take a sufficiently low $dt$ to  reduce the artificial precession, we will compensate for this value when solving the three-body problem for Mercury.
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{precession_error.png}
     \caption{Precession in the two-body problem as a function of the divisions per period used.}
@@ -180,7 +175,7 @@ We now consider the influence of Jupiter over Mercury, resulting in a three-body
 
 The resulting orbits are much more interesting (see figure \ref{fig:jupiter_orbit}), as the behavior after each period drifts significantly from the perihelia. Moreover, we see a much thicker orbit, due to the influence of Jupiter, which modifies the shape of the orbit. The points sampled in each period show that the size of the orbit oscillates between a maximum and a minimum.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.38\textwidth]{jupiter_orbit.png}
     \includegraphics[width=0.45\textwidth]{jupiter_a.png}    
@@ -190,7 +185,7 @@ The resulting orbits are much more interesting (see figure \ref{fig:jupiter_orbi
 
 Now we will see the precession obtained with the algorithm described in section \ref{sec:precession}. In figure \ref{fig:jupiter_precession}, we observe the angle of the orbit $\omega$ versus time.
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{jupiter_precession_dt_5000.png}
     \caption{Precession of Mercury relative to the Sun in the three-body problem, obtained with 5000 divisions per period and integrated over 100 periods of Mercury. The precession obtained in the linear fit is $-91\pm8''/\text{century}$, and in the fit to the average, $-85\pm1'' /\text{century}$.}
@@ -213,7 +208,7 @@ Lastly, it is necessary to see that the precession value obtained by this method
 
 We calculate precessions for the two and three-body problems for different values of $dt$ and represent the results on figure \ref{fig:jupiter_error}. It is clear that the difference between the precessions is constant for the values of $dt$ studied, which reaffirms our hypothesis, and the constant value matches the experimental observations.
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{jupiter_synodic_dt5000.png}
     \caption{Synodic oscillations in Mercury's precession}
@@ -241,7 +236,7 @@ Therefore, we conclude that the method developed is viable and yields physical r
 
 \appendix
 \section{Table of parameters and values}
-For the simulation, we used the data enumerated in table \ref{tab:datos}, taken from \cite{giordano}.
+For the simulation, we used the data enumerated in table \ref{tab:parametros}, taken from \cite{giordano}.
 
 Note that:
 \begin{itemize}
@@ -259,20 +254,18 @@ Note that:
         \hline
         \multicolumn{3}{|l|}{\textbf{General parameters}} \\
         \hline
-        Gravitational constant & $G$ & $4\pi^2\ \text{AU}^3/\text{year}^2/M_\odot$ \\
+        Gravitational constant& $G$ & $4\pi^2$ \\
         \hline
         \multicolumn{3}{|l|}{\textbf{Mercury's parameters}} \\
         \hline
-        Orbital period & $T$ & $0.24 \ \text{years}$ \\
-        Eccentricity & $\varepsilon$ & $0.206$ \\
-        Semi-major axis & $a$ & $0.39\ \text{AU}$ \\
-        Mass & $M_M$ & $1.65 \times 10^{-7} M_\odot$ \\
+        Eccentricity & $\varepsilon$ & $0.20564$ \\
+        Semi-major axis (AU) & $a$ & $0.3871$ \\
+        Mass ($M_\odot$) & $M_M$ & $1.659 \times 10^{-7}$ \\
         \hline
         \multicolumn{3}{|l|}{\textbf{Jupiter's parameters}} \\
         \hline
-        Mass & $M_J$ & $9.5 \times 10^{-4}\ M_\odot$ \\
-        Orbital period & $T_J$ & $11.86\ \text{years}$ \\
-        Distance to the Sun & $R$ & $5.2\ \text{AU}$ \\
+        Radius of the orbit (AU) & $R$ & $5.2025$ \\
+        Mass ($M_\odot$)& $M_J$ & $9.542 \times 10^{-4}$ \\
         \hline
         \multicolumn{3}{|l|}{\textbf{Simulation parameters}} \\
         \hline
@@ -281,11 +274,12 @@ Note that:
         Number of steps & $N$ & $t_f / dt$ \\
         \hline
     \end{tabular}
-    \caption{Table of parameters used in the simulation of the Solar System}
-    \label{tab:datos}
+    \caption{Table of parameters used in the simulation of the Solar System.}
+    \label{tab:parametros}
 \end{table}
+% ($\text{AU}^3/\text{year}^2/M_\odot$)
 
-\bibliographystyle{unsrturl}
+\bibliographystyle{unsrt}
 
 \bibliography{biblography}
 

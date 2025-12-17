@@ -7,20 +7,21 @@ Updated: 16/12/2025
 import numpy as np
 from numpy import pi as π
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
-from scipy.stats import chi2
 import time
 import numba as nb
+from scipy.optimize import curve_fit
 import landaubeta as hasperdido
+from pathlib import Path
+
+"""--- Initialization ---"""
 
 hasperdido.use_latex_fonts()
-
 time_start = time.time()
-
+current_dir = Path(__file__).parent 
 
 """--- Define constants and parameters ---"""
 
-# General parameters (astronomical units, years, solar mass = 1)
+# General parameters (astronomical units, years, solar masses)
 G = 4 * π**2            # Gravitational constant in AU^3 / (yr^2 * M_sun)
 
 # Mercury parameters
@@ -39,7 +40,8 @@ v_J = 2 * π * R / T_J   # Circular orbital speed for Jupiter (AU/yr)
 
 # Simulation parameters
 n_div = 5000
-tf = 500 * T            # Total integration time (years)
+n_periods = 500         # Number of Mercury periods to simulate
+tf = n_periods * T            # Total integration time (years)
 dt = T / n_div          # Time step (years)
 N = int(tf / dt)        # Number of time steps
 
@@ -126,7 +128,6 @@ def euler_cromer(f, x0, v0, dt, tf, M_J):
 
 def precession_main(M_J=M_J_true):
     time_simulation_start = time.time()
-    """Main function to simulate Mercury's orbit with Jupiter perturbation"""
     # Initial conditions
     # Set the Sun velocity so that the center of mass remains stationary
     vs = -(M_J * v_J + M_M * vmax) / (1 + M_J + M_M)
@@ -212,11 +213,10 @@ t_max = t_perihelion[np.where(c_max)[0]]
 T_sinodico = np.mean(t_max[1:] - t_max[:-1])
 
 # Empirical fit to the perihelion angle data
-popt, pcov = curve_fit(empirical_fit, t_perihelion, theta_perihelion, p0=[-2.4e-4, T_sinodico, 1e-3, 1e-4, 0, 0.1, theta_perihelion[0]], sigma=dtheta_perihelion, absolute_sigma=True)
+p0_omegadot =[-2.4e-4, T_sinodico, 1e-3, 1e-4, 0, 0.1, theta_perihelion[0]]
+popt, pcov = curve_fit(empirical_fit, t_perihelion, theta_perihelion, p0=p0_omegadot, sigma=dtheta_perihelion, absolute_sigma=True)
 perr = np.sqrt(np.diag(pcov))
-
-p_value_perihelion = hasperdido.calculate_p_value_chi(t_perihelion, theta_perihelion, empirical_fit, popt, y_err=dtheta_perihelion, print_parameters=False)[0]
-print(f"\np-value for perihelion angle fit: {p_value_perihelion:.120f}")
+p_value_omegadot = hasperdido.calculate_p_value_chi(t_perihelion, theta_perihelion, empirical_fit, popt, y_err=dtheta_perihelion, print_parameters=False)[0]
 
 # Fit eccentricity to "empirical_2"
 p0_e = [T_sinodico, 1e-3, 1e-3, t_perihelion[0], 0, ecc_0]
@@ -235,6 +235,7 @@ res_a = a_perihelion - empirical_2(t_perihelion, *popt_a) if not np.all(np.isnan
 chi2_a = np.nansum((res_a / da_perihelion)**2) if np.all(np.isfinite(da_perihelion)) else np.nan
 
 # Print fit parameters
+print(f"\np-value for perihelion angle fit: {p_value_omegadot:.120f}")
 print(f"\nPerihelion fit parameters:")
 parameter_list = ['m (rad/s)', 'T (s)', 'A (rad)', 'B (rad)', 't_0 (s)', 'phi (rad)', 'n (rad)']
 for i in range(len(popt)):
@@ -282,8 +283,8 @@ plt.xlabel(r'$t$ (years)')
 plt.ylabel(r'$\theta$ (rad)')
 plt.title("Precession of Mercury's perihelion with Jupiter Perturbation")
 plt.legend(loc='upper left')
-plt.show()
-
+plt.savefig(current_dir / ".." / "figures" / "precession.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+# plt.show()
 
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.errorbar(t_perihelion, ecc_perihelion, yerr=decc_perihelion, fmt='.', capsize=5, label="Eccentricity from ellipse fits")
@@ -293,7 +294,9 @@ ax.set_xlabel(r'$t$ (years)')
 ax.set_ylabel(r'Eccentricity $\varepsilon$')
 ax.set_title(r'Mercury orbital eccentricity evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
-plt.show()
+plt.legend(loc='upper left')
+plt.savefig(current_dir / ".." / "figures" / "eccentricity.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+# plt.show()
 
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -304,4 +307,6 @@ ax.set_xlabel(r'$t$ (years)')
 ax.set_ylabel(r'Semi-major axis $a$ (AU)')
 ax.set_title(r'Mercury orbital semi-major axis evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
-plt.show()
+plt.legend(loc='upper left')
+plt.savefig(current_dir / ".." / "figures" / "semi-major_axis.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+# plt.show()

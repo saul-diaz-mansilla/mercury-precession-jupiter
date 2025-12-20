@@ -16,6 +16,7 @@
 \usepackage{booktabs}
 \usepackage[superscript]{cite}
 \usepackage{etoolbox}
+\usepackage{import}
 
 \markboth{S. Díaz Mansilla}
 {Shell \MakeLowercase{\textit{et al.}}:}
@@ -121,21 +122,18 @@ The aim of this paper is to recreate the value of Mercury's precession due to Ju
 
 \section{Numerical methods}\label{sec:precession}
 
-Given an orbit with relative positions to the Sun $(x,y)$, semi-major axis $a$ and eccentricity $\varepsilon$, we simulate its precession with the following algorithm:
+We obatain the evolution of Mercury's orbital parameters due to Jupiter's perturbation with the following algorithm:
 \begin{enumerate}
     \item Integrate the equations of motion \eqref{eq:Mercurio}, \eqref{eq:Jupiter}, \eqref{eq:Sol} using the Euler-Cromer method\cite{giordano} as we need a method that conserves energy in each period to avoid accumulation of numerical error.
     \item Calculate the polar coordinates of Mercury relative to the Sun: $r=\sqrt{(x_M-x_S)^2+(y_M-y_S)^2}$, $ \theta=\arctan((y_M-y_S)/(x_M-x_S)).$
     \item Find the perihelia as relative minima of $r$.
-    \item Fit the data $(r(t),\theta(t))$ between the perihelia to an ellipse rotated by an angle $\omega$, given by equation \eqref{eq:ellipse}. From this, obtain the value of $\omega$. Taking the angle for the point of the minimum distance does not yield the correct result.
+    \item Fit the data $(r(t),\theta(t))$ between the perihelia to an ellipse rotated by an angle $\omega$, given by equation \eqref{eq:ellipse}. From this, obtain the value of $\omega$, $a$ and $\varepsilon$ for each period.
     \item Add $2\pi n$ when necessary to compensate for the loops that the ellipse can make when rotating it.
-    \item Compensate for artificial precession due to numerical error and average over cyclic behavior.
-    \item Fit the times $t$ versus the angles $\omega$ using a linear relation. Obtain $d\omega/dt$, which is by definition the precession of the orbit.
 \end{enumerate}
-Moreover, we observe oscillations added to the linear behavior of $\omega$ with respect to time. To account for them:
+This algorithm is run twice:
 \begin{itemize}
-    \item Find the period of the oscillations as the mean time between the maxima.
-    \item Make a measurement around every point ($T/2$ on each side), taking into account the boundary effects.
-    \item Find the slope using the previously obtained mean. Delete the points separated by $T/2$ in the boundaries.
+    \item First, with $M_J=0$. Knowing that the expected orbital parameters the two body problem are $\omega=0$, $a=a_0$ and $\varepsilon=\varepsilon_0$, we can calculate the deviation introduced by the method on each parameter.
+    \item Then, with the real value of $M_J$. We subtract the deviations obtained in the previous step to calculate the real values of the orbital parameters.
 \end{itemize}
 
 \section{Results}
@@ -288,34 +286,40 @@ Note that:
         \toprule
         Parameter & Value $\pm$ Error \\
         \midrule
-        \input{../figures/precession.tex}
+        m (rad/s) & $(7.609413 \pm 0.000005) \times 10^{-6}$ \\
+        T (s) & $5.930144 \pm 0.000001$ \\
+        A (rad) & $(-3.65252 \pm 0.00002) \times 10^{-5}$ \\
+        B (rad) & $(-7.1828 \pm 0.0002) \times 10^{-6}$ \\
+        $t_0$ (s) & $-0.07834 \pm 0.00001$ \\
+        $\phi$ (rad) & $0.01159 \pm 0.00003$ \\
+        n (rad) & $(4.7384108 \pm 0.0000003) \times 10^{-3}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\begin{table}[ht]
-    \centering
-    \caption{Best-fit parameters for the eccentricity model.}
-    \label{tab:fit_e}
-    \begin{tabular}{ll}
-        \toprule
-        Parameter & Value $\pm$ Error \\
-        \midrule
-        \input{../figures/eccentricity.tex}
-        \bottomrule
-    \end{tabular}
+% \begin{table}[ht]
+%     \centering
+%     \caption{Best-fit parameters for the eccentricity model.}
+%     \label{tab:fit_e}
+%     \begin{tabular}{ll}
+%         \toprule
+%         Parameter & Value $\pm$ Error \\
+%         \midrule
+%         \input{../figures/eccentricity.tex}
+%         \bottomrule
+%     \end{tabular}
 
-\begin{table}[ht]
-    \centering
-    \caption{Best-fit parameters for the semi-major axis model.}
-    \label{tab:fit_a}
-    \begin{tabular}{ll}
-        \toprule
-        Parameter & Value $\pm$ Error \\
-        \midrule
-        \input{../figures/semi-major_axis.tex}
-        \bottomrule
-    \end{tabular}
+% \begin{table}[ht]
+%     \centering
+%     \caption{Best-fit parameters for the semi-major axis model.}
+%     \label{tab:fit_a}
+%     \begin{tabular}{ll}
+%         \toprule
+%         Parameter & Value $\pm$ Error \\
+%         \midrule
+%         \input{../figures/semi-major_axis.tex}
+%         \bottomrule
+%     \end{tabular}
 
 \bibliographystyle{unsrt}
 

@@ -155,10 +155,8 @@ def precession_main(M_J=M_J_true):
     rms_error_ym = np.sqrt(np.mean(error_estimate_ym**2))
 
     # Identify perihelion indices: a point is a perihelion if it's a local minimum
-    condicion = (r[1:-1] < r[:-2]) & (r[1:-1] < r[2:])
-    i_perihelion = np.where(condicion)[0]
-    r_perihelion = r[i_perihelion]
-
+    perihelion_condition = (r[1:-1] < r[:-2]) & (r[1:-1] < r[2:])
+    i_perihelion = np.where(perihelion_condition)[0]
 
     # True polar angle of Mercury relative to the Sun position
     theta = np.arctan2(x[1] - x[5], x[0] - x[4])
@@ -303,8 +301,8 @@ ax.set_xlabel(r'$t$ (years)')
 ax.set_ylabel(r'$\theta$ (rad)')
 # ax.set_title("Precession of Mercury's perihelion with Jupiter Perturbation")
 ax.legend(loc='upper left')
-plt.savefig(current_dir / ".." / "figures" / "precession.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
-# plt.show()
+# plt.savefig(current_dir / ".." / "figures" / "precession.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+plt.show()
 
 # Eccentricity plot
 fig, ax = plt.subplots()
@@ -316,8 +314,8 @@ ax.set_ylabel(r'Eccentricity $\varepsilon$')
 # ax.set_title(r'Mercury orbital eccentricity evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
 plt.legend(loc='upper left')
-plt.savefig(current_dir / ".." / "figures" / "eccentricity.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
-# plt.show()
+# plt.savefig(current_dir / ".." / "figures" / "eccentricity.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+plt.show()
 
 # Semi-major axis plot
 fig, ax = plt.subplots()
@@ -329,5 +327,5 @@ ax.set_ylabel(r'Semi-major axis $a$ (AU)')
 # ax.set_title(r'Mercury orbital semi-major axis evolution due to Jupiter perturbation')
 ax.legend(loc='upper left')
 plt.legend(loc='upper left')
-plt.savefig(current_dir / ".." / "figures" / "semi-major_axis.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
-# plt.show()
+# plt.savefig(current_dir / ".." / "figures" / "semi-major_axis.pdf", bbox_inches='tight', metadata={'Author': 'Saúl Díaz Mansilla', 'Keywords': f"divisions per period: {n_div}, total periods: {n_periods}"})
+plt.show()

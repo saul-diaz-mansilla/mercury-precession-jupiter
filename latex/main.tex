@@ -17,6 +17,7 @@
 \usepackage[superscript]{cite}
 \usepackage{etoolbox}
 \usepackage{import}
+\usepackage{float}
 
 \markboth{S. Díaz Mansilla}
 {Shell \MakeLowercase{\textit{et al.}}:}
@@ -30,7 +31,7 @@
 \maketitle
 
 \begin{abstract}
-    We estimate the precession of Mercury's orbit due to Jupiter's gravitational perturbation by numerically integrating the three-body problem (Sun--Mercury--Jupiter) using the Euler--Cromer method, extracting orbital elements via ellipse fitting at each perihelion passage. After compensating for the numerical precession of the integration scheme, we obtain $\dot\omega = 156.9554 \pm 0.0001''/$century, in reasonable agreement with the accepted value of $152.6''/$century given the simplifications of the model. We also characterise the synodic oscillations in eccentricity and semi-major axis and explain the observed offset between the mean perturbed eccentricity and the unperturbed value.
+    We estimate the precession of Mercury's orbit due to Jupiter's gravitational perturbation by numerically integrating the three-body problem (Sun--Mercury--Jupiter) using the Euler--Cromer method, extracting orbital elements via ellipse fitting at each perihelion passage. After compensating for the numerical precession of the integration scheme, we obtain $\dot\omega = 156.9554 \pm 0.0001''/$century. This agrees completely with the theoretical value of $156.94''/$century for this simplified model calculated by Stewart, obtaining a greater precision. The accepted value for the real precession is $152.6''/$century. We also characterise the synodic oscillations in eccentricity and semi-major axis and explain the observed offset between the mean perturbed eccentricity and the unperturbed value.
 \end{abstract}
 
 \section{Introduction}
@@ -162,7 +163,7 @@ The secular precession rate, obtained from the slope $m$ of the fit converted to
 \begin{equation}
     \dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}
 \end{equation}
-The accepted value for Mercury's precession due to Jupiter is $152.6\,{}^{\prime\prime}/\text{century}$~\cite{precession}. The $\sim 3\%$ discrepancy is attributable to the simplifications of the model: the assumption of a circular orbit for Jupiter, the restriction to a planar (2D) geometry, and minor higher-order effects accumulated over the 500-period simulation.
+This agrees completely with the theoretical value of $156.94\,{}^{\prime\prime}/\text{century}$ for this simplified model (circular orbit for Jupiter, restriction to a planar 2D geometry) calculated by Stewart \cite{stewart}, and our simulation obtains a greater precision. The accepted value for the real precession due to Jupiter is $152.6\,{}^{\prime\prime}/\text{century}$~\cite{precession}.
 
 \subsection{Evolution of eccentricity and semi-major axis}
 
@@ -205,7 +206,7 @@ After subtracting the numerical precession introduced by the integration scheme,
 \begin{equation*}
     \dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}
 \end{equation*}
-This is in reasonable agreement with the accepted value of $152.6\,{}^{\prime\prime}/\text{century}$, with the $\sim 3\%$ discrepancy attributable to the model's simplifications (circular Jupiter orbit, planar geometry).
+This agrees completely with the theoretical value of $156.94\,{}^{\prime\prime}/\text{century}$ for this simplified model calculated by Stewart \cite{stewart}, and our simulation obtains a greater precision. The accepted value for the real precession due to Jupiter is $152.6\,{}^{\prime\prime}/\text{century}$~\cite{precession}.
 
 Beyond precession, the simulation reproduces the synodic oscillations of Mercury's orbital elements due to Jupiter's perturbation, with a period of $T \approx 5.93$~years consistent with half of Jupiter's orbital period. The eccentricity and semi-major axis evolution are well described by a two-sinusoid empirical model. We have also provided a physical explanation for the observed offset between the mean perturbed eccentricity and the initial unperturbed value, attributing it to the gravitational dressing effect of Jupiter's perturbation.
 
@@ -215,13 +216,8 @@ We conclude that the Euler--Cromer method, combined with ellipse fitting and num
 \section{Table of parameters and values}
 For the simulation, we used the data enumerated in table \ref{tab:parametros}, taken from \cite{giordano}.
 
-Note that:
-\begin{itemize}
-    \item The orbital period is recalculated using equation \eqref{eq:kepler3} to achieve more numerical precision.
-    \item We integrate over 500 periods of Mercury because both Mercury's and Jupiter's orbits repeat every $\sim 50$ periods, so that the results obtained have a periodic pattern.
-\end{itemize}
-
-\begin{table}[!h]
+Note that the orbital period is recalculated using equation \eqref{eq:kepler3} to achieve more numerical precision. We integrate over 500 periods of Mercury because both Mercury's and Jupiter's orbits repeat every $\sim 50$ periods, so that the results obtained have a periodic pattern.
+\begin{table}[!ht]
     \centering
     \caption{Table of parameters used in the simulation.}
     \renewcommand{\arraystretch}{1}
@@ -253,7 +249,7 @@ Note that:
     \label{tab:parametros}
 \end{table}
 
-\begin{table}[!t]
+\begin{table}[!ht]
     \centering
     \caption{Best-fit parameters for the precession model (equation~\eqref{eq:empirical_fit}).}
     \label{tab:fit_params}
@@ -265,7 +261,7 @@ Note that:
     \end{tabular}
 \end{table}
 
-\begin{table}[!t]
+\begin{table}[!ht]
     \centering
     \caption{Best-fit parameters for the eccentricity model (equation~\eqref{eq:empirical_2}).}
     \label{tab:fit_e}
@@ -277,7 +273,7 @@ Note that:
     \end{tabular}
 \end{table}
 
-\begin{table}[!t]
+\begin{table}[!ht]
     \centering
     \caption{Best-fit parameters for the semi-major axis model (equation~\eqref{eq:empirical_2}).}
     \label{tab:fit_a}

@@ -8,7 +8,7 @@ We estimate the precession of Mercury's orbit due to Jupiter's gravitational per
 
 $$\dot\omega = 156.9554 \pm 0.0001 \;\text{arcsec/century}$$
 
-in reasonable agreement with the accepted value of $152.6''$/century, with the ~3 % discrepancy attributable to model simplifications (circular Jupiter orbit, coplanar 2-D geometry). We also characterise the synodic oscillations in eccentricity and semi-major axis and explain the observed offset between the mean perturbed eccentricity and the unperturbed value.
+This agrees completely with the theoretical value of $156.94''$/century for this simplified model (circular Jupiter orbit, coplanar 2-D geometry) computed by Stewart [5], and our simulation obtains a greater precision. The accepted value of the real precession is $152.6''$/century. We also characterise the synodic oscillations in eccentricity and semi-major axis and explain the observed offset between the mean perturbed eccentricity and the unperturbed value.
 
 ## Quick Start
 
@@ -84,8 +84,8 @@ mercury-precession-jupiter/
 
 ## References
 
-- N. J. Giordano and H. Nakanishi, *Computational Physics*, 2nd ed. (Pearson Prentice Hall, 2006).
-- H. Goldstein, C. P. Poole, and J. L. Safko, *Classical Mechanics*, 3rd ed. (Pearson, 2011).
-- R. Fitzpatrick, *An Introduction to Celestial Mechanics* (University of Texas at Austin, 2012).
-- R. A. Rydin, *The Theory of Mercury's Anomalous Precession*.
-- M. G. Stewart, "Precession of the perihelion of Mercury's orbit," *Am. J. Phys.* **73**, 730–734 (2005).
+[1] N. J. Giordano and H. Nakanishi, *Computational Physics*, 2nd ed. (Pearson Prentice Hall, 2006).
+[2] H. Goldstein, C. P. Poole, and J. L. Safko, *Classical Mechanics*, 3rd ed. (Pearson, 2011).
+[3] R. Fitzpatrick, *An Introduction to Celestial Mechanics* (University of Texas at Austin, 2012).
+[4] R. A. Rydin, *The Theory of Mercury's Anomalous Precession*.
+[5] M. G. Stewart, "Precession of the perihelion of Mercury's orbit," *Am. J. Phys.* **73**, 730–734 (2005).

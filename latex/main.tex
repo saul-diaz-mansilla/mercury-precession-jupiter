@@ -201,7 +201,7 @@ The semi-major axis, by contrast, depends primarily on the total orbital energy,
 
 Through numerical simulation of the Sun--Mercury--Jupiter three-body problem using the Euler--Cromer integrator, we have estimated the precession of Mercury's orbit due to Jupiter's gravitational perturbation.
 
-After subtracting the numerical precession introduced by the integration scheme---calibrated via a two-body control run---the secular precession rate is:
+After subtracting the numerical precession introduced by the integration scheme, calibrated via a two-body control run, the secular precession rate is:
 \begin{equation*}
     \dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}
 \end{equation*}
@@ -221,9 +221,9 @@ Note that:
     \item We integrate over 500 periods of Mercury because both Mercury's and Jupiter's orbits repeat every $\sim 50$ periods, so that the results obtained have a periodic pattern.
 \end{itemize}
 
-\begin{table}[h]
+\begin{table}[!h]
     \centering
-    \caption{Table of parameters used in the simulation of the Solar System.}
+    \caption{Table of parameters used in the simulation.}
     \renewcommand{\arraystretch}{1}
     \setlength{\tabcolsep}{6.5pt} % Adjust column spacing
     \begin{tabular}{| l | c | c |}
@@ -247,15 +247,13 @@ Note that:
         \hline
         \multicolumn{3}{|l|}{\textbf{Simulation parameters}} \\
         \hline
-        Total time & $t_f$ & $500T$ \\
-        Time step & $dt$ & $T/n_{div}$ \\
-        Number of steps & $N$ & $t_f / dt$ \\
+        Total time & $t_f$ & $500T_M$ \\
         \hline
     \end{tabular}
     \label{tab:parametros}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[!t]
     \centering
     \caption{Best-fit parameters for the precession model (equation~\eqref{eq:empirical_fit}).}
     \label{tab:fit_params}
@@ -263,18 +261,11 @@ Note that:
         \toprule
         Parameter & Value $\pm$ Error \\
         \midrule
-        m (rad/yr) & $(7.609413 \pm 0.000005) \times 10^{-6}$ \\
-        T (yr) & $5.930144 \pm 0.000001$ \\
-        A (rad) & $(-3.65252 \pm 0.00002) \times 10^{-5}$ \\
-        B (rad) & $(-7.1828 \pm 0.0002) \times 10^{-6}$ \\
-        $t_0$ (yr) & $-0.07834 \pm 0.00001$ \\
-        $\phi$ (rad) & $0.01159 \pm 0.00003$ \\
-        n (rad) & $(4.7384108 \pm 0.0000003) \times 10^{-3}$ \\
-        \bottomrule
+        \input{../figures/precession.tex}
     \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[!t]
     \centering
     \caption{Best-fit parameters for the eccentricity model (equation~\eqref{eq:empirical_2}).}
     \label{tab:fit_e}
@@ -282,17 +273,11 @@ Note that:
         \toprule
         Parameter & Value $\pm$ Error \\
         \midrule
-        T (yr) & $5.930195 \pm 0.000001$ \\
-        A & $(-7.40057 \pm 0.00005) \times 10^{-6}$ \\
-        B & $(1.36491 \pm 0.00005) \times 10^{-6}$ \\
-        $t_0$ (yr) & $1.28335 \pm 0.00001$ \\
-        $\phi$ (rad) & $-0.80282 \pm 0.00004$ \\
-        n & $0.20563339355 \pm 0.00000000003$ \\
-        \bottomrule
+        \input{../figures/eccentricity.tex}
     \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[!t]
     \centering
     \caption{Best-fit parameters for the semi-major axis model (equation~\eqref{eq:empirical_2}).}
     \label{tab:fit_a}
@@ -300,13 +285,7 @@ Note that:
         \toprule
         Parameter & Value $\pm$ Error \\
         \midrule
-        T (yr) & $5.929990 \pm 0.000003$ \\
-        A (AU) & $(2.86148 \pm 0.00006) \times 10^{-7}$ \\
-        B (AU) & $(-2.1390 \pm 0.0006) \times 10^{-8}$ \\
-        $t_0$ (yr) & $-0.55080 \pm 0.00004$ \\
-        $\phi$ (rad) & $0.7047 \pm 0.0003$ \\
-        n (AU) & $0.387099996891 \pm 0.000000000004$ \\
-        \bottomrule
+        \input{../figures/semi-major_axis.tex}
     \end{tabular}
 \end{table}
 

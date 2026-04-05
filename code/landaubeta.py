@@ -103,15 +103,16 @@ def latex_format(value, error):
     return f"${result}$"
 
 def latex_table_scientific(parameter_list, formatted_list, filename):
-    # 1. Create a list of "Parameter & Value" strings; last row omits trailing \\
-    pairs = list(zip(parameter_list, formatted_list))
+    # 1. Create a list of "Parameter & Value \\" strings
     rows = [
-        f"{name} & {val} \\\\" if i < len(pairs) - 1 else f"{name} & {val}"
-        for i, (name, val) in enumerate(pairs)
+        f"{name} & {val} \\\\"
+        for name, val in zip(parameter_list, formatted_list)
     ]
 
-    # 2. Join them with newlines
-    final_output = "\n".join(rows)
+    # 2. Join rows and append \bottomrule (must be inside the \input group
+    #    because LaTeX's \input wraps content in a group, and \noalign-based
+    #    commands like \bottomrule cannot cross group boundaries)
+    final_output = "\n".join(rows) + "\n\\bottomrule"
 
     # 3. Write directly to the file
     with (filename).open('w', encoding='utf-8') as f:

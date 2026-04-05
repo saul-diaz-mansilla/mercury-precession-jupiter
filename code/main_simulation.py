@@ -244,13 +244,13 @@ hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / 
 print(f"\nPerihelion fit parameters:")
 hasperdido.print_scientific(popt, perr, parameter_list)
 
-parameter_list = ['T (s)', 'A', 'B', 't_0 (s)', 'φ (rad)', 'n']
+parameter_list = ['T (s)', 'A', 'B', '$t_0$ (s)', '$\\phi$ (rad)', 'n']
 formatted_list = [hasperdido.latex_format(parameter, error) for parameter, error in zip(popt_e, perr_e)]
 hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / ".." / "figures" / "eccentricity.tex")
 print(f"\nEccentricity fit parameters:")
 hasperdido.print_scientific(popt_e, perr_e, parameter_list)
 
-parameter_list = ['T (s)', 'A (AU)', 'B (AU)', 't_0 (s)', 'φ (rad)', 'n (AU)']
+parameter_list = ['T (s)', 'A (AU)', 'B (AU)', '$t_0$ (s)', '$\\phi$ (rad)', 'n (AU)']
 formatted_list = [hasperdido.latex_format(parameter, error) for parameter, error in zip(popt_a, perr_a)]
 hasperdido.latex_table_scientific(parameter_list, formatted_list, current_dir / ".." / "figures" / "semi-major_axis.tex")
 print(f"\nSemi-major axis fit parameters:")

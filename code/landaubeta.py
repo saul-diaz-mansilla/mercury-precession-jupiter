@@ -103,10 +103,11 @@ def latex_format(value, error):
     return f"${result}$"
 
 def latex_table_scientific(parameter_list, formatted_list, filename):
-    # 1. Create a list of "Parameter & Value \\" strings
+    # 1. Create a list of "Parameter & Value" strings; last row omits trailing \\
+    pairs = list(zip(parameter_list, formatted_list))
     rows = [
-        f"{name} & {val} \\\\" 
-        for name, val in zip(parameter_list, formatted_list)
+        f"{name} & {val} \\\\" if i < len(pairs) - 1 else f"{name} & {val}"
+        for i, (name, val) in enumerate(pairs)
     ]
 
     # 2. Join them with newlines

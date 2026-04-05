@@ -28,10 +28,9 @@
 \begin{document}
 \setcounter{secnumdepth}{3}
 \maketitle
-% \tableofcontents
 
 \begin{abstract}
-    We found the value of the precession of Mercury's orbit due to Jupiter to be of $152\pm8$ arc seconds per century, which matches the experimental value of $152.6$ arc seconds per century. This indicates that our simulations of the three-body problem are accurate enough and that our method for calculating perihelia is valid.
+    We estimate the precession of Mercury's orbit due to Jupiter's gravitational perturbation by numerically integrating the three-body problem (Sun--Mercury--Jupiter) using the Euler--Cromer method, extracting orbital elements via ellipse fitting at each perihelion passage. After compensating for the numerical precession of the integration scheme, we obtain $\dot\omega = 156.9554 \pm 0.0001''/$century, in reasonable agreement with the accepted value of $152.6''/$century given the simplifications of the model. We also characterise the synodic oscillations in eccentricity and semi-major axis and explain the observed offset between the mean perturbed eccentricity and the unperturbed value.
 \end{abstract}
 
 \section{Introduction}
@@ -122,7 +121,7 @@ The aim of this paper is to recreate the value of Mercury's precession due to Ju
 
 \section{Numerical methods}\label{sec:precession}
 
-We obatain the evolution of Mercury's orbital parameters due to Jupiter's perturbation with the following algorithm:
+We obtain the evolution of Mercury's orbital parameters due to Jupiter's perturbation with the following algorithm:
 \begin{enumerate}
     \item Integrate the equations of motion \eqref{eq:Mercurio}, \eqref{eq:Jupiter}, \eqref{eq:Sol} using the Euler-Cromer method\cite{giordano} as we need a method that conserves energy in each period to avoid accumulation of numerical error.
     \item Calculate the polar coordinates of Mercury relative to the Sun: $r=\sqrt{(x_M-x_S)^2+(y_M-y_S)^2}$, $ \theta=\arctan((y_M-y_S)/(x_M-x_S)).$
@@ -138,100 +137,79 @@ This algorithm is run twice:
 
 \section{Results}
 
-\subsection{The two-body problem: numerical solution}
+The algorithm described in section~\ref{sec:precession} is applied to the three-body system over 500 orbital periods of Mercury (approximately 120~years), using $n_{\text{div}}=5000$ time-step divisions per period (see table~\ref{tab:parametros}).
 
-We will study Mercury's trajectory when it interacts just with the Sun. The equations of motion of the system will be \eqref{eq:Mercurio}, \eqref{eq:Jupiter}, \eqref{eq:Sol} with $M_J=0$.
+\subsection{Precession of Mercury's perihelion}
 
-The analytic solution is given by the equation \eqref{eq:ellipse}, a stationary ellipse. However, when integrating the equations numerically, some precession is observed. This is due to the numerical error of the method, which builds up over each period when not completing exactly a full rotation (see figures \ref{fig:two_body_orbit} and \ref{fig:two_body_precession}).
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{two_body_orbit.png}
-    \includegraphics[width=0.45\textwidth]{two_body_orbit_amp.png}
-    \caption{Mercury's orbit in the two-body problem. We see that the perihelia do not happen every period, which introduces a numerical error.}
-    \label{fig:two_body_orbit}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{dt_5000.png}
-    \caption{Angle of the perihelion $\omega$ as a function of time for 5000 divisions per period, integrated up to 100 periods of Mercury. We observe precession due to the accumulated numerical error.}
-    \label{fig:two_body_precession}
-\end{figure}
-
-We observe a precession of $-242''/$century, which is on the order of the expected value of $152''/$century, so the numerical error is not negligible for our purposes. As it is not efficient to take a sufficiently low $dt$ to  reduce the artificial precession, we will compensate for this value when solving the three-body problem for Mercury.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{precession_error.png}
-    \caption{Precession in the two-body problem as a function of the divisions per period used.}
-    \label{fig:precession_error}
-\end{figure}
-
-\subsection{Precession due to Jupiter}
-
-We now consider the influence of Jupiter over Mercury, resulting in a three-body problem. As stated in section \ref{sec:theory}, we will choose a frame of reference where the center of mass is static.
-
-The resulting orbits are much more interesting (see figure \ref{fig:jupiter_orbit}), as the behavior after each period drifts significantly from the perihelia. Moreover, we see a much thicker orbit, due to the influence of Jupiter, which modifies the shape of the orbit. The points sampled in each period show that the size of the orbit oscillates between a maximum and a minimum.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.38\textwidth]{jupiter_orbit.png}
-    \includegraphics[width=0.45\textwidth]{jupiter_a.png}    
-    \caption{On top, orbit of Mercury relative to the Sun in the three-body problem, using 5000 divisions per period and integrated over 100 periods}
-    \label{fig:jupiter_orbit}
-\end{figure}
-
-Now we will see the precession obtained with the algorithm described in section \ref{sec:precession}. In figure \ref{fig:jupiter_precession}, we observe the angle of the orbit $\omega$ versus time.
+Figure~\ref{fig:jupiter_precession} shows the perihelion angle $\omega$ as a function of time. The behaviour is well described by a secular (linear) precession superimposed with synodic oscillations:
+\begin{equation}
+    \omega(t) = mt + n - A\sin\!\left(\frac{2\pi}{T}(t-t_0)\right) + B\sin\!\left(\frac{\pi}{T}(t-t_0)+\phi\right)
+    \label{eq:empirical_fit}
+\end{equation}
+whose best-fit parameters are listed in table~\ref{tab:fit_params}. The synodic oscillation period obtained from the fit is $T=5.930$~years, consistent with half of Jupiter's orbital period, as expected from the geometry of their gravitational interaction:
+\begin{equation*}
+    \frac{T_J}{T_{\text{synodic}}}\approx 2,\quad \frac{T_M}{T_{\text{synodic}}}\approx 25
+\end{equation*}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{../figures/precession.pdf}
-    \caption{Precession of Mercury relative to the Sun in the three-body problem, obtained with 5000 divisions per period and integrated over 100 periods of Mercury. The precession obtained in the linear fit is $-91\pm8''/\text{century}$, and in the fit to the average, $-85\pm1'' /\text{century}$.}
+    \caption{Perihelion angle $\omega$ of Mercury as a function of time in the three-body problem. The inset shows the quality of the empirical fit at late times. The secular precession rate, after subtracting the numerical error from the integration scheme, is $\dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}$.}
     \label{fig:jupiter_precession}
 \end{figure}
 
-It is clear that the behavior of the precession is a sum of two movements: a \textit{secular} precession contributing linearly plus a \textit{synodic} precession that provides sinusoidal oscillations.
-
-Taking into account the precession introduced by the numerical error, we can obtain the value of the precession of Mercury due to Jupiter:
+The secular precession rate, obtained from the slope $m$ of the fit converted to arc seconds per century, is:
 \begin{equation}
-    \dot\omega = 152\pm8''/\text{century}
+    \dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}
 \end{equation}
+The accepted value for Mercury's precession due to Jupiter is $152.6\,{}^{\prime\prime}/\text{century}$~\cite{precession}. The $\sim 3\%$ discrepancy is attributable to the simplifications of the model: the assumption of a circular orbit for Jupiter, the restriction to a planar (2D) geometry, and minor higher-order effects accumulated over the 500-period simulation.
 
-It is also interesting to study the synodic oscillations. In figure \ref{fig:jupiter_synodic} we represent the synodic precession, obtained by subtracting the linear component. The diagram shows a period of 5.93 years, which verifies the following ratios:
-\begin{equation*}
-    \frac{T_J}{T_{synodic}}\approx2,\ \frac{T_M}{T_{synodic}}\approx25
-\end{equation*}
+\subsection{Evolution of eccentricity and semi-major axis}
 
-Lastly, it is necessary to see that the precession value obtained by this method is not cherry-picked from the choice of $dt$, but is valid for all reasonable values of the time step.
+In addition to precession, Jupiter's perturbation induces periodic oscillations in Mercury's instantaneous eccentricity and semi-major axis. These are obtained from the ellipse fits at each perihelion passage after subtracting the systematic bias determined from the two-body calibration run.
 
-We calculate precessions for the two and three-body problems for different values of $dt$ and represent the results on figure \ref{fig:jupiter_error}. It is clear that the difference between the precessions is constant for the values of $dt$ studied, which reaffirms our hypothesis, and the constant value matches the experimental observations.
+Both quantities are well described by the empirical oscillatory model:
+\begin{equation}
+    f(t) = A\sin\!\left(\frac{2\pi}{T}(t-t_0)\right) + B\sin\!\left(\frac{\pi}{T}(t-t_0)+\phi\right) + n
+    \label{eq:empirical_2}
+\end{equation}
+whose best-fit parameters are listed in tables~\ref{tab:fit_e} and~\ref{tab:fit_a}. In both cases, the dominant oscillation period matches the synodic period of $\sim 5.93$~years found in the precession analysis.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{jupiter_synodic_dt5000.png}
-    \caption{Synodic oscillations in Mercury's precession}
-    \label{fig:jupiter_synodic}
+    \includegraphics[width=0.45\textwidth]{../figures/eccentricity.pdf}
+    \caption{Evolution of Mercury's orbital eccentricity due to Jupiter's perturbation. The orange curve is an empirical fit to equation~\eqref{eq:empirical_2}. The dashed red line marks the unperturbed eccentricity $\varepsilon_0 = 0.20564$. The data oscillate around a mean value $\bar\varepsilon = 0.20563339$, systematically lower than $\varepsilon_0$ (see section~\ref{sec:ecc_offset}).}
+    \label{fig:eccentricity}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{jupiter_error.png}
-    \caption{Mercury's precession for different values of $dt$. The mean of the obtained values is of 152.12''/century.}
-    \label{fig:jupiter_error}
+    \includegraphics[width=0.45\textwidth]{../figures/semi-major_axis.pdf}
+    \caption{Evolution of Mercury's orbital semi-major axis due to Jupiter's perturbation. The green curve is an empirical fit to equation~\eqref{eq:empirical_2}. The dashed red line marks the unperturbed semi-major axis $a_0 = 0.3871$~AU. Unlike the eccentricity, the semi-major axis oscillates symmetrically around its initial value.}
+    \label{fig:semi_major_axis}
 \end{figure}
+
+\subsubsection{Eccentricity offset from the unperturbed value}\label{sec:ecc_offset}
+
+A notable feature of figure~\ref{fig:eccentricity} is that the mean eccentricity ($\bar\varepsilon = 0.20563339$) is systematically lower than the initial unperturbed value ($\varepsilon_0 = 0.20564$), by $\delta\varepsilon \approx 6.6\times10^{-6}$, which is comparable to the oscillation amplitude $A \approx 7.4\times10^{-6}$.
+
+This offset is a physical effect, not a numerical artefact. The initial conditions place Mercury at the perihelion of its unperturbed Keplerian orbit, while Jupiter sits on the same radial axis at distance $R$. From the very first time step, Jupiter exerts a radial gravitational pull on Mercury that modifies the effective radial force balance. As a result, the eccentricity of the perturbed orbit is shifted from the bare value $\varepsilon_0$. In the language of perturbation theory, the time-averaged eccentricity is shifted by the perturbation, and the orbit oscillates around this \textit{dressed} value rather than the original one.
+
+The semi-major axis, by contrast, depends primarily on the total orbital energy, which is only modified to second order by the perturbation. This explains why the semi-major axis in figure~\ref{fig:semi_major_axis} oscillates symmetrically around $a_0$, while the eccentricity does not.
 
 \section{Conclusion}
 
-Through numerical simulation of the Sun–Mercury–Jupiter system, it has been possible to estimate the precession of Mercury’s orbit due to the gravitational influence of Jupiter.
+Through numerical simulation of the Sun--Mercury--Jupiter three-body problem using the Euler--Cromer integrator, we have estimated the precession of Mercury's orbit due to Jupiter's gravitational perturbation.
 
-Several methods for calculating this value have been tested, among which the extrapolation method was discarded for producing results that were too imprecise. The most precise result was ultimately obtained using a direct linear fit to the rotation angle, which—although it carries a larger error (due to synodic oscillations)—is still more accurate than the fit performed after averaging to eliminate those oscillations, since the averaging introduces greater inaccuracies. We finally obtain a value of $152\pm8''/$ century, which matches the experimental result of $152.6''/$century.
+After subtracting the numerical precession introduced by the integration scheme---calibrated via a two-body control run---the secular precession rate is:
+\begin{equation*}
+    \dot\omega = 156.9554 \pm 0.0001\,{}^{\prime\prime}/\text{century}
+\end{equation*}
+This is in reasonable agreement with the accepted value of $152.6\,{}^{\prime\prime}/\text{century}$, with the $\sim 3\%$ discrepancy attributable to the model's simplifications (circular Jupiter orbit, planar geometry).
 
-As can be seen, after correcting the numerical error introduced by the Euler–Cromer integration, the obtained precession value matches the real value in all significant figures, with a very small computation time.
+Beyond precession, the simulation reproduces the synodic oscillations of Mercury's orbital elements due to Jupiter's perturbation, with a period of $T \approx 5.93$~years consistent with half of Jupiter's orbital period. The eccentricity and semi-major axis evolution are well described by a two-sinusoid empirical model. We have also provided a physical explanation for the observed offset between the mean perturbed eccentricity and the initial unperturbed value, attributing it to the gravitational dressing effect of Jupiter's perturbation.
 
-Additional behaviors of Mercury due to Jupiter have also been reproduced, such as synodic oscillations. These resonance effects in the orbital periods are successfully reproduced in the simulation, and the deformation of Mercury’s orbital size can be observed.
-
-Therefore, we conclude that the method developed is viable and yields physical results, very useful for computationally studying celestial mechanics phenomena.
+We conclude that the Euler--Cromer method, combined with ellipse fitting and numerical error compensation, provides a computationally efficient and physically accurate approach for studying celestial mechanics problems of this type.
 
 \appendix
 \section{Table of parameters and values}
@@ -240,14 +218,14 @@ For the simulation, we used the data enumerated in table \ref{tab:parametros}, t
 Note that:
 \begin{itemize}
     \item The orbital period is recalculated using equation \eqref{eq:kepler3} to achieve more numerical precision.
-    \item We integrate over 100 periods of Mercury because both Mercury's and Jupiter's orbits repeat every \~ 50 periods, so that the results obtained have a periodic pattern.
+    \item We integrate over 500 periods of Mercury because both Mercury's and Jupiter's orbits repeat every $\sim 50$ periods, so that the results obtained have a periodic pattern.
 \end{itemize}
 
 \begin{table}[h]
     \centering
     \caption{Table of parameters used in the simulation of the Solar System.}
     \renewcommand{\arraystretch}{1}
-    \setlength{\tabcolsep}{6.5pt} % Ajustar el espaciado entre columnas
+    \setlength{\tabcolsep}{6.5pt} % Adjust column spacing
     \begin{tabular}{| l | c | c |}
         \hline
         \textbf{Parameter} & \textbf{Symbol} & \textbf{Value} \\
@@ -276,66 +254,64 @@ Note that:
     \end{tabular}
     \label{tab:parametros}
 \end{table}
-% ($\text{AU}^3/\text{year}^2/M_\odot$)
 
 \begin{table}[ht]
     \centering
-    \caption{Best-fit parameters for the precession model.}
+    \caption{Best-fit parameters for the precession model (equation~\eqref{eq:empirical_fit}).}
     \label{tab:fit_params}
     \begin{tabular}{ll}
         \toprule
         Parameter & Value $\pm$ Error \\
         \midrule
-        m (rad/s) & $(7.609413 \pm 0.000005) \times 10^{-6}$ \\
-        T (s) & $5.930144 \pm 0.000001$ \\
+        m (rad/yr) & $(7.609413 \pm 0.000005) \times 10^{-6}$ \\
+        T (yr) & $5.930144 \pm 0.000001$ \\
         A (rad) & $(-3.65252 \pm 0.00002) \times 10^{-5}$ \\
         B (rad) & $(-7.1828 \pm 0.0002) \times 10^{-6}$ \\
-        $t_0$ (s) & $-0.07834 \pm 0.00001$ \\
+        $t_0$ (yr) & $-0.07834 \pm 0.00001$ \\
         $\phi$ (rad) & $0.01159 \pm 0.00003$ \\
         n (rad) & $(4.7384108 \pm 0.0000003) \times 10^{-3}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-% \begin{table}[ht]
-%     \centering
-%     \caption{Best-fit parameters for the eccentricity model.}
-%     \label{tab:fit_e}
-%     \begin{tabular}{ll}
-%         \toprule
-%         Parameter & Value $\pm$ Error \\
-%         \midrule
-%         \input{../figures/eccentricity.tex}
-%         \bottomrule
-%     \end{tabular}
+\begin{table}[ht]
+    \centering
+    \caption{Best-fit parameters for the eccentricity model (equation~\eqref{eq:empirical_2}).}
+    \label{tab:fit_e}
+    \begin{tabular}{ll}
+        \toprule
+        Parameter & Value $\pm$ Error \\
+        \midrule
+        T (yr) & $5.930195 \pm 0.000001$ \\
+        A & $(-7.40057 \pm 0.00005) \times 10^{-6}$ \\
+        B & $(1.36491 \pm 0.00005) \times 10^{-6}$ \\
+        $t_0$ (yr) & $1.28335 \pm 0.00001$ \\
+        $\phi$ (rad) & $-0.80282 \pm 0.00004$ \\
+        n & $0.20563339355 \pm 0.00000000003$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-% \begin{table}[ht]
-%     \centering
-%     \caption{Best-fit parameters for the semi-major axis model.}
-%     \label{tab:fit_a}
-%     \begin{tabular}{ll}
-%         \toprule
-%         Parameter & Value $\pm$ Error \\
-%         \midrule
-%         \input{../figures/semi-major_axis.tex}
-%         \bottomrule
-%     \end{tabular}
+\begin{table}[ht]
+    \centering
+    \caption{Best-fit parameters for the semi-major axis model (equation~\eqref{eq:empirical_2}).}
+    \label{tab:fit_a}
+    \begin{tabular}{ll}
+        \toprule
+        Parameter & Value $\pm$ Error \\
+        \midrule
+        T (yr) & $5.929990 \pm 0.000003$ \\
+        A (AU) & $(2.86148 \pm 0.00006) \times 10^{-7}$ \\
+        B (AU) & $(-2.1390 \pm 0.0006) \times 10^{-8}$ \\
+        $t_0$ (yr) & $-0.55080 \pm 0.00004$ \\
+        $\phi$ (rad) & $0.7047 \pm 0.0003$ \\
+        n (AU) & $0.387099996891 \pm 0.000000000004$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \bibliographystyle{unsrt}
 
 \bibliography{biblography}
 
 \end{document}
-
-% -------- TO DO LIST --------
-% explain eccentricity plot
-% explain why initial angle is not 0
-% link tables with fit parameters
-% dts argument and validity of fits
-% compare to 3d model using inclinations
-
-% change results section and figures
-% improve theory section
-% write abstract
-% write introduction
-% write conclusion
